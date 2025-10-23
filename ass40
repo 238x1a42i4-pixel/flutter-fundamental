@@ -1,0 +1,46 @@
+We have reordered a given list of data by drag and drop. How will you achieve this problem statement?
+var List=[item1,item2,item3,item4,item5]
+Hint 1:- Use ListTitle and ReorderedListByDragDrop widget.
+Hint 2:- Add logic for the reordered list by drag and drop. 
+source code
+import 'package:flutter/material.dart';
+
+class DragDropReorderList extends StatefulWidget {
+  @override
+  _DragDropReorderListState createState() => _DragDropReorderListState();
+}
+
+class _DragDropReorderListState extends State<DragDropReorderList> {
+  // Your initial list of items
+  List<String> items = ['item1', 'item2', 'item3', 'item4', 'item5'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Reorder List by Drag & Drop')),
+      body: ReorderableListView(
+        children: [
+          // Create a ListTile for each item in the list
+          for (final item in items)
+            ListTile(
+              key: ValueKey(item),  // Key is mandatory for reorderable list items
+              title: Text(item),
+              leading: Icon(Icons.drag_handle),
+            )
+        ],
+        onReorder: (oldIndex, newIndex) {
+          setState(() {
+            // Adjust newIndex if dragging downwards
+            if (newIndex > oldIndex) newIndex -= 1;
+
+            // Remove the dragged item and insert it at the new position
+            final movedItem = items.removeAt(oldIndex);
+            items.insert(newIndex, movedItem);
+          });
+        },
+      ),
+    );
+  }
+}
+
+void main() => runApp(MaterialApp(home: DragDropReorderList()));
